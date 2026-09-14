@@ -14,6 +14,7 @@ façon écran LCD, visage qui reagit) s'inspire du démineur de Windows.
 
 import time
 import tkinter as tk
+from tkinter import simpledialog
 
 from demineur import (
     create_grid,
@@ -25,6 +26,7 @@ from demineur import (
 
 
 GRIS = "#c0c0c0"
+GRIS_OUVERT = "#dcdcdc"
 
 COULEURS = {
     1: "#0000ff",
@@ -62,6 +64,7 @@ def afficher_menu_difficulte(fenetre):
     fenetre.resizable(True, True)
     for widget in fenetre.winfo_children():
         widget.destroy()
+    fenetre.update_idletasks()
 
     tk.Label(
         fenetre, text="Choisissez un niveau de difficulté", bg=GRIS,
@@ -83,6 +86,9 @@ def demarrer_partie(fenetre, rows, cols, nb_mines):
     """Construit l'état d'une nouvelle partie et affiche la grille."""
     for widget in fenetre.winfo_children():
         widget.destroy()
+    # Sans ce rafraîchissement forcé, Windows laisse parfois un résidu
+    # visuel de l'ancienne grille affiché par-dessus la nouvelle.
+    fenetre.update_idletasks()
 
     etat = {
         "fenetre": fenetre,
@@ -96,6 +102,8 @@ def demarrer_partie(fenetre, rows, cols, nb_mines):
         "partie_terminee": False,
         "debut": None,
         "id_minuterie": None,
+        "clics_compteur_mines": 0,
+        "dernier_clic_compteur": 0.0,
     }
 
     fenetre.config(menu=construire_menu(etat))
@@ -108,6 +116,7 @@ def demarrer_partie(fenetre, rows, cols, nb_mines):
         font=("Consolas", 16, "bold"), width=3,
     )
     etat["label_mines"].pack(side="left", padx=6, pady=4)
+    etat["label_mines"].bind("<Button-1>", lambda event: gerer_clic_compteur_mines(etat))
 
     etat["bouton_visage"] = tk.Button(
         entete, text="🙂", font=("Segoe UI Emoji", 14), width=2,
@@ -216,6 +225,36 @@ def clic_droit(etat, r, c):
     mettre_a_jour_compteur_mines(etat)
 
 
+def gerer_clic_compteur_mines(etat):
+    """Easter egg : trois clics rapprochés sur le compteur de mines
+    proposent de tricher en changeant le nombre de mines de la partie."""
+    maintenant = time.time()
+    if maintenant - etat["dernier_clic_compteur"] > 1:
+        etat["clics_compteur_mines"] = 0
+    etat["clics_compteur_mines"] += 1
+    etat["dernier_clic_compteur"] = maintenant
+
+    if etat["clics_compteur_mines"] >= 3:
+        etat["clics_compteur_mines"] = 0
+        proposer_triche_mines(etat)
+
+
+def proposer_triche_mines(etat):
+    """Ouvre une popup pour changer le nombre de mines, puis relance une
+    partie (fraîche) avec la nouvelle valeur."""
+    rows, cols = etat["rows"], etat["cols"]
+    nouvelle_valeur = simpledialog.askinteger(
+        "Easter egg",
+        f"Nombre de mines (entre 1 et {rows * cols - 1}) :",
+        parent=etat["fenetre"],
+        initialvalue=etat["nb_mines"],
+        minvalue=1,
+        maxvalue=rows * cols - 1,
+    )
+    if nouvelle_valeur is not None:
+        demarrer_partie(etat["fenetre"], rows, cols, nouvelle_valeur)
+
+
 # ---------------------------------------------------------------------------
 # Affichage
 # ---------------------------------------------------------------------------
@@ -237,14 +276,14 @@ def rafraichir_bouton(etat, r, c, case_explosee=None):
     elif valeur == "F":
         bouton.config(text="🚩", relief="raised", bd=2, bg=GRIS, activebackground=GRIS)
     elif valeur == "*":
-        fond = "#ff0000" if (r, c) == case_explosee else GRIS
+        fond = "#ff0000" if (r, c) == case_explosee else GRIS_OUVERT
         bouton.config(text="💣", relief="sunken", bd=1, bg=fond, activebackground=fond)
     elif valeur == 0:
-        bouton.config(text="", relief="sunken", bd=1, bg=GRIS, activebackground=GRIS)
+        bouton.config(text="", relief="sunken", bd=1, bg=GRIS_OUVERT, activebackground=GRIS_OUVERT)
     else:
         bouton.config(
             text=str(valeur), fg=COULEURS.get(valeur, "black"),
-            relief="sunken", bd=1, bg=GRIS, activebackground=GRIS,
+            relief="sunken", bd=1, bg=GRIS_OUVERT, activebackground=GRIS_OUVERT,
         )
 
 

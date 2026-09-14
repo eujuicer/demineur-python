@@ -14,6 +14,12 @@ python demineur.py
 Un petit menu permet de choisir la difficulté (Facile / Moyen /
 Difficile), puis la partie démarre dans la console.
 
+Une interface graphique (tkinter) est aussi disponible :
+
+```bash
+python demineur_gui.py
+```
+
 ## Contrôles : navigation au curseur (au lieu des commandes texte)
 
 L'énoncé propose des commandes tapées au clavier (`o ligne colonne`,
@@ -49,13 +55,15 @@ sans attendre la touche Entrée après chaque déplacement.
 - Compteur de coups joués.
 - Temps de jeu affiché en fin de partie.
 - Plusieurs niveaux de difficulté (Facile 9x9, Moyen 16x16, Difficile 16x30).
+- Interface graphique (`demineur_gui.py`, avec tkinter) : clic gauche pour
+  ouvrir une case, clic droit pour poser/retirer un drapeau, compteur de
+  mines restantes et chronomètre.
 
 ### Bonus avancés non implémentés
 
 - Empêcher la génération de mines *autour* de la première case (et pas
   seulement dessus) : demanderait de faire évoluer `generate_mines` pour
   accepter une zone interdite plutôt qu'une seule case.
-- Interface graphique (optionnelle dans l'énoncé).
 
 ## Écrans de fin de partie
 
@@ -69,7 +77,8 @@ coloré (codes ANSI, sans dépendance externe) :
 
 ```
 demineur-python/
-├── demineur.py           # Le jeu
+├── demineur.py           # Le jeu (console)
+├── demineur_gui.py       # Le jeu (interface graphique tkinter)
 ├── demineur.md           # Énoncé de l'exercice
 ├── tests/
 │   └── test_demineur.py  # Tests unitaires (pytest)

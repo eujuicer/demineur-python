@@ -1,78 +1,77 @@
-# Démineur (console, Python)
+# Minesweeper (console, Python)
 
-Implémentation de l'énoncé [`demineur.md`](demineur.md) : démineur en mode
-console, sans programmation orientée objet. Ce README ne couvre que ce qui a
-été ajouté par rapport à l'énoncé — les règles du jeu, la liste des fonctions
-demandées et les contraintes sont décrites dans `demineur.md`.
+Implementation of the exercise statement [`demineur.md`](demineur.md) (written in French): a console minesweeper,
+without object-oriented programming. This README only covers what was added
+compared to the statement — the game rules, the list of required functions
+and the constraints are described in `demineur.md`.
 
-## Lancer le jeu
+## Running the game
 
 ```bash
 python demineur.py
 ```
 
-Un petit menu permet de choisir la difficulté (Facile / Moyen /
-Difficile), puis la partie démarre dans la console.
+A small menu lets you choose the difficulty (Easy / Medium / Hard), then the
+game starts in the console. The in-game interface is in French.
 
-## Contrôles : navigation au curseur (au lieu des commandes texte)
+## Controls: cursor navigation (instead of text commands)
 
-L'énoncé propose des commandes tapées au clavier (`o ligne colonne`,
-`f ligne colonne`). Cette implémentation les remplace par un curseur
-déplaçable dans la grille, plus rapide à jouer :
+The statement suggests commands typed on the keyboard (`o row column`,
+`f row column`). This implementation replaces them with a cursor that can be
+moved around the grid, which is faster to play:
 
-| Touche                     | Effet                                                   |
-|----------------------------|----------------------------------------------------------|
-| Flèches ou `Z`/`Q`/`S`/`D`  | Déplacer le curseur (haut/gauche/bas/droite)             |
-| `Entrée`                   | Ouvrir la case sous le curseur                           |
-| `Espace`                   | Poser ou retirer un drapeau sur la case sous le curseur  |
-| `Échap`                    | Abandonner la partie                                     |
+| Key                          | Effect                                                    |
+|------------------------------|-----------------------------------------------------------|
+| Arrows or `Z`/`Q`/`S`/`D`     | Move the cursor (up/left/down/right — AZERTY layout)      |
+| `Enter`                     | Open the cell under the cursor                            |
+| `Space`                     | Place or remove a flag on the cell under the cursor       |
+| `Esc`                       | Quit the game                                             |
 
-La case du curseur s'affiche entre crochets `[ ]`. Ce mode nécessite
-Windows : il utilise le module standard `msvcrt` pour lire les touches
-sans attendre la touche Entrée après chaque déplacement.
+The cursor cell is displayed between brackets `[ ]`. This mode requires
+Windows: it uses the standard `msvcrt` module to read keys without waiting
+for the Enter key after each move.
 
-## Fonctions ajoutées en plus de l'énoncé
+## Functions added beyond the statement
 
-- `lire_touche()` — lit une touche au clavier (flèches, Z/Q/S/D, Entrée,
-  Espace, Échap) et retourne une action normalisée.
-- `deplacer_curseur(r, c, direction, rows, cols)` — calcule la nouvelle
-  position du curseur en restant dans la grille.
-- `afficher_defaite()` / `afficher_victoire()` — écrans de fin de partie
-  en ASCII art coloré (voir plus bas).
-- `choisir_difficulte()` — petit menu de sélection du niveau.
+- `lire_touche()` — reads a key press (arrows, Z/Q/S/D, Enter, Space, Esc)
+  and returns a normalized action.
+- `deplacer_curseur(r, c, direction, rows, cols)` — computes the new cursor
+  position while staying inside the grid.
+- `afficher_defaite()` / `afficher_victoire()` — colored ASCII art end-of-game
+  screens (see below).
+- `choisir_difficulte()` — small level selection menu.
 
-## Bonus implémentés (parmi ceux listés dans demineur.md)
+## Implemented bonuses (among those listed in demineur.md)
 
-- Impossible de poser un drapeau sur une case déjà révélée.
-- Affichage amélioré (numéros de lignes/colonnes, `.` pour les cases à 0,
-  curseur encadré).
-- Compteur de coups joués.
-- Temps de jeu affiché en fin de partie.
-- Plusieurs niveaux de difficulté (Facile 9x9, Moyen 16x16, Difficile 16x30).
+- Impossible to place a flag on an already revealed cell.
+- Improved display (row/column numbers, `.` for cells with 0, framed cursor).
+- Move counter.
+- Play time displayed at the end of the game.
+- Several difficulty levels (Easy 9x9, Medium 16x16, Hard 16x30).
 
-### Bonus avancés non implémentés
+### Advanced bonuses not implemented
 
-- Empêcher la génération de mines *autour* de la première case (et pas
-  seulement dessus) : demanderait de faire évoluer `generate_mines` pour
-  accepter une zone interdite plutôt qu'une seule case.
-- Interface graphique (optionnelle dans l'énoncé).
+- Preventing mines from being generated *around* the first cell (and not only
+  on it): this would require changing `generate_mines` to accept a forbidden
+  zone instead of a single cell.
+- Graphical interface (optional in the statement).
 
-## Écrans de fin de partie
+## End-of-game screens
 
-En plus du message texte, la partie se termine par un écran en ASCII art
-coloré (codes ANSI, sans dépendance externe) :
+In addition to the text message, the game ends with a colored ASCII art screen
+(ANSI codes, no external dependency):
 
-- **Défaite** : "BOOM" encadré de deux bombes, en rouge.
-- **Victoire** : un démineur en tenue, pouce levé, en vert.
+- **Defeat**: "BOOM" framed by two bombs, in red.
+- **Victory**: a mine-clearing expert in gear, thumbs up, in green.
 
-## Structure du projet
+## Project structure
 
 ```
 demineur-python/
-├── demineur.py           # Le jeu
-├── demineur.md           # Énoncé de l'exercice
+├── demineur.py           # The game
+├── demineur.md           # Exercise statement
 ├── tests/
-│   └── test_demineur.py  # Tests unitaires (pytest)
+│   └── test_demineur.py  # Unit tests (pytest)
 ├── requirements.txt
 ├── .gitignore
 └── README.md
@@ -80,13 +79,13 @@ demineur-python/
 
 ## Tests
 
-Les fonctions pures du jeu (tout sauf `minesweeper`, qui lit le clavier)
-sont testées avec `pytest` :
+The pure functions of the game (everything except `minesweeper`, which reads
+the keyboard) are tested with `pytest`:
 
 ```bash
 pip install -r requirements.txt
 pytest -v
 ```
 
-Si `pytest` n'est pas reconnu après l'installation (dossier `Scripts` de
-Python absent du PATH), utiliser `python -m pytest -v` à la place.
+If `pytest` is not recognized after installation (Python's `Scripts` folder
+missing from the PATH), use `python -m pytest -v` instead.

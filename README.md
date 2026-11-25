@@ -25,7 +25,7 @@ déplaçable dans la grille, plus rapide à jouer :
 | Flèches ou `Z`/`Q`/`S`/`D`  | Déplacer le curseur (haut/gauche/bas/droite)             |
 | `Entrée`                   | Ouvrir la case sous le curseur                           |
 | `Espace`                   | Poser ou retirer un drapeau sur la case sous le curseur  |
-| `Echap`                    | Abandonner la partie                                     |
+| `Échap`                    | Abandonner la partie                                     |
 
 La case du curseur s'affiche entre crochets `[ ]`. Ce mode nécessite
 Windows : il utilise le module standard `msvcrt` pour lire les touches
@@ -34,7 +34,7 @@ sans attendre la touche Entrée après chaque déplacement.
 ## Fonctions ajoutées en plus de l'énoncé
 
 - `lire_touche()` — lit une touche au clavier (flèches, Z/Q/S/D, Entrée,
-  Espace, Echap) et retourne une action normalisée.
+  Espace, Échap) et retourne une action normalisée.
 - `deplacer_curseur(r, c, direction, rows, cols)` — calcule la nouvelle
   position du curseur en restant dans la grille.
 - `afficher_defaite()` / `afficher_victoire()` — écrans de fin de partie
